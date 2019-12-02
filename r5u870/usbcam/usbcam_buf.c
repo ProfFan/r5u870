@@ -581,7 +581,7 @@ static int usbcam_videobuf_prepare(struct videobuf_queue *vq,
 		framep->vmap_base = NULL;
 		framep->vmap_sof = NULL;
 
-		usbcam_dbg(udp, VIDEOBUF, "%s, field=%d, vbb={w: %u, h: %u, size: %u, bsize: %u, baddr: %lu}\n",
+		usbcam_dbg(udp, VIDEOBUF, "%s, field=%d, vbb={w: %u, h: %u, size: %lu, bsize: %u, baddr: %lu}\n",
 			__func__, field, framep->vbb.width, framep->vbb.height, framep->vbb.size, framep->vbb.bsize, framep->vbb.baddr);
 
 		usbcam_dbg(udp, VIDEOBUF,
