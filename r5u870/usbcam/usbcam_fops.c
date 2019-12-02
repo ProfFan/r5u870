@@ -538,7 +538,7 @@ static int usbcam_v4l_vidioc_querycap(struct file *filp, void *fh,
 {
 	struct usbcam_fh *ufp = (struct usbcam_fh *) fh;
 	struct usbcam_dev *udp = ufp->ufh_dev;
-	struct usb_device *udev = interface_to_usbdev(udp->ud_intf)
+	struct usb_device *udev = interface_to_usbdev(udp->ud_intf);
 	usbcam_lock(udp);
 	strlcpy(cap->driver,
 		usbcam_drvname(udp->ud_minidrv),
