@@ -53,7 +53,9 @@
 #else
 #include <media/videobuf-dma-sg.h>
 #endif
-
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 11, 0)
+#include <linux/sched/signal.h>
+#endif
 
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,19)
 #define usb_endpoint_xfer_bulk(EPD) \

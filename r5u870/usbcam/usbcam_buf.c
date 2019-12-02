@@ -221,7 +221,7 @@ void usbcam_curframe_complete_detail(struct usbcam_dev *udp,
 	if (cf) {
 		framep->vbb.size = cf->uf_size;
 		framep->vbb.field = cf->uf_field;
-		framep->vbb.ts = cf->uf_timestamp;
+		framep->vbb.ts = v4l2_timeval_to_ns(&cf->uf_timestamp);
 
 		if (framep->vbb.bsize < cf->uf_size) {
 			usbcam_warn(udp, "%s: minidriver supplied "

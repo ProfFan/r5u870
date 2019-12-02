@@ -178,7 +178,9 @@ static int usbcam_usb_probe(struct usb_interface *intf,
     v4l2dev = (struct v4l2_device *) kzalloc(sizeof(*v4l2dev), GFP_KERNEL);
     if(!v4l2dev) { return -ENOMEM; }
     INIT_LIST_HEAD(&v4l2dev->subdevs);
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0)
     mutex_init(&v4l2dev->ioctl_lock);
+#endif
     spin_lock_init(&v4l2dev->lock);
     kref_init(&v4l2dev->ref);
     v4l2dev->release = v4l2_release;
@@ -307,8 +309,16 @@ static int usbcam_usb_probe(struct usb_interface *intf,
 			}
 	}
 
-    res = video_register_device(&udp->ud_vdev, VFL_TYPE_GRABBER, -1);
+    res = v4l2_device_register(&intf->dev, &v4l2_dev_tmp);
+	if (res) {
+		usbcam_err(udp, "%s: v4l2_register_device failed",
+			__FUNCTION__);
+	}
 
+	udp->ud_vdev.v4l2_dev = &v4l2_dev_tmp;
+
+	res = video_register_device(&udp->ud_vdev, VFL_TYPE_GRABBER, -1);
+	
 	if (res) {
 		usbcam_err(udp, "%s: video_register_device failed", __FUNCTION__);
 		usbcam_lock(udp);
@@ -784,7 +794,7 @@ int usbcam_work_cancel(struct usbcam_workitem *wip)
 			wakeit = 1;
 		list_del_init(&wip->uw_links);
 		if (wakeit)
-			force_sig(SIGUSR1, udp->ud_work_thread);
+			send_sig(SIGUSR1, udp->ud_work_thread, 1);
 	}
 	spin_unlock_irqrestore(&udp->ud_work_lock, flags);
 
@@ -899,9 +909,9 @@ void usbcam_work_stop(struct usbcam_dev *udp)
 }
 
 
-static void usbcam_delayedwork_timeout(unsigned long data)
+static void usbcam_delayedwork_timeout(struct timer_list *t)
 {
-	struct usbcam_delayedwork *dwp = (struct usbcam_delayedwork *) data;
+	struct usbcam_delayedwork *dwp = from_timer(dwp, t, dw_timer);
 	int res;
 	res = usbcam_work_queue(&dwp->dw_work);
 	if (res)
@@ -914,9 +924,9 @@ void usbcam_delayedwork_init(struct usbcam_dev *udp,
 			     usbcam_workfunc_t func)
 {
 	usbcam_work_init(udp, &dwp->dw_work, func);
-	setup_timer(&dwp->dw_timer,
+	timer_setup(&dwp->dw_timer,
 		    usbcam_delayedwork_timeout,
-		    (unsigned long) dwp);
+		    0);
 }
 USBCAM_EXPORT_SYMBOL(usbcam_delayedwork_init);
 
