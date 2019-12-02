@@ -538,18 +538,20 @@ static int usbcam_v4l_vidioc_querycap(struct file *filp, void *fh,
 {
 	struct usbcam_fh *ufp = (struct usbcam_fh *) fh;
 	struct usbcam_dev *udp = ufp->ufh_dev;
-
+	struct usb_device *udev = interface_to_usbdev(udp->ud_intf)
 	usbcam_lock(udp);
 	strlcpy(cap->driver,
 		usbcam_drvname(udp->ud_minidrv),
 		sizeof(cap->driver));
 	strlcpy(cap->card, udp->ud_vdev.name, sizeof(cap->card));
+	usb_make_path(udev, cap->bus_info, sizeof(cap->bus_info));
     /*
 	snprintf(cap->bus_info, sizeof(cap->bus_info),
 		 "usb:%s", udp->ud_dev->dev.bus_id);
          */
+	printk(KERN_WARNING "**FAN: !!!!!!! QUERYCAP! %s", __FUNCTION__);
 	cap->version = udp->ud_minidrv->um_version;
-	cap->capabilities = (V4L2_CAP_VIDEO_CAPTURE |
+	cap->capabilities = (V4L2_CAP_DEVICE_CAPS | V4L2_CAP_VIDEO_CAPTURE |
 			     V4L2_CAP_READWRITE |
 			     V4L2_CAP_STREAMING);
 	usbcam_unlock(udp);
