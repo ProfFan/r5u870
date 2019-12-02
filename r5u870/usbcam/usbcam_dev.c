@@ -154,6 +154,7 @@ struct usbcam_claimed_interface {
 	struct usb_interface	*ui_intf;
 };
 
+struct v4l2_device v4l2_dev_tmp;
 
 static int usbcam_usb_probe(struct usb_interface *intf,
 			    const struct usb_device_id *devid)
@@ -318,7 +319,7 @@ static int usbcam_usb_probe(struct usb_interface *intf,
 	udp->ud_vdev.v4l2_dev = &v4l2_dev_tmp;
 
 	res = video_register_device(&udp->ud_vdev, VFL_TYPE_GRABBER, -1);
-	
+
 	if (res) {
 		usbcam_err(udp, "%s: video_register_device failed", __FUNCTION__);
 		usbcam_lock(udp);
