@@ -191,13 +191,13 @@ static int usbcam_usb_probe(struct usb_interface *intf,
     v4l2dev->ctrl_handler = NULL;
     v4l2dev->notify = v4l2_notify;
 
-	v4l2dev->vdev.device_caps = V4L2_CAP_VIDEO_CAPTURE |
+	v4l2dev->device_caps = V4L2_CAP_VIDEO_CAPTURE |
 			     V4L2_CAP_READWRITE |
 			     V4L2_CAP_STREAMING;
 
-	v4l2_disable_ioctl(&v4l2dev->vdev, VIDIOC_QUERYSTD);
-	v4l2_disable_ioctl(&v4l2dev->vdev, VIDIOC_G_STD);
-	v4l2_disable_ioctl(&v4l2dev->vdev, VIDIOC_S_STD);
+	v4l2_disable_ioctl(&v4l2dev, VIDIOC_QUERYSTD);
+	v4l2_disable_ioctl(&v4l2dev, VIDIOC_G_STD);
+	v4l2_disable_ioctl(&v4l2dev, VIDIOC_S_STD);
 	
 	/* Allocate and initialize a device structure */
 	udp = (struct usbcam_dev *) kzalloc(sizeof(*udp) + minidrv->um_dev_privsize, GFP_KERNEL);
