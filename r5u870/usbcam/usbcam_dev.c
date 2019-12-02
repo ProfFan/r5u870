@@ -224,9 +224,9 @@ static int usbcam_usb_probe(struct usb_interface *intf,
 			     V4L2_CAP_READWRITE |
 			     V4L2_CAP_STREAMING;
 
-	v4l2_disable_ioctl(udp.ud_vdev, VIDIOC_QUERYSTD);
-	v4l2_disable_ioctl(udp.ud_vdev, VIDIOC_G_STD);
-	v4l2_disable_ioctl(udp.ud_vdev, VIDIOC_S_STD);
+	v4l2_disable_ioctl(&udp->ud_vdev, VIDIOC_QUERYSTD);
+	v4l2_disable_ioctl(&udp->ud_vdev, VIDIOC_G_STD);
+	v4l2_disable_ioctl(&udp->ud_vdev, VIDIOC_S_STD);
 
 	/* Add the device to the minidriver's list of active devices */
 	usbcam_lock(udp);
