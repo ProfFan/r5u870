@@ -581,12 +581,15 @@ static int usbcam_videobuf_prepare(struct videobuf_queue *vq,
 		framep->vmap_base = NULL;
 		framep->vmap_sof = NULL;
 
+		usbcam_dbg(udp, VIDEOBUF, "%s, field=%d, vbb={w: %u, h: %u, size: %lu, bsize: %lu, baddr: %a}\n",
+			__func__, field, framep->vbb.width, framep->vbb.height, framep->vbb.size, framep->vbb.bsize, framep->vbb.baddr);
+
 		usbcam_dbg(udp, VIDEOBUF,
 			   "preparing frame %p/%d/%p", vq, framep->vbb.i, framep);
 
 		/* We also lock down the memory that was allocated for it */
-		res = CALL(vq, iolock, vq, &framep->vbb, NULL);
-		// res = videobuf_iolock(vq, &framep->vbb, NULL);
+		// res = CALL(vq, iolock, vq, &framep->vbb, NULL);
+		res = videobuf_iolock(vq, &framep->vbb, NULL);
 		
 		if (res)
 			goto fail;
