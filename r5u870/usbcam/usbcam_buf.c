@@ -550,6 +550,9 @@ static void usbcam_videobuf_free(struct videobuf_queue *vq,
 	}
 }
 
+#define CALL(q, f, arg...)						\
+	((q->int_ops->f) ? q->int_ops->f(arg) : 0)
+
 static int usbcam_videobuf_prepare(struct videobuf_queue *vq,
 				   struct videobuf_buffer *vb,
 				   enum v4l2_field field)
@@ -582,7 +585,9 @@ static int usbcam_videobuf_prepare(struct videobuf_queue *vq,
 			   "preparing frame %p/%d/%p", vq, framep->vbb.i, framep);
 
 		/* We also lock down the memory that was allocated for it */
-		res = videobuf_iolock(vq, &framep->vbb, NULL);
+		res = CALL(vq, iolock, vq, framep->vbb.i, NULL);
+		// res = videobuf_iolock(vq, &framep->vbb, NULL);
+		
 		if (res)
 			goto fail;
 
