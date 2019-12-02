@@ -585,7 +585,7 @@ static int usbcam_videobuf_prepare(struct videobuf_queue *vq,
 			   "preparing frame %p/%d/%p", vq, framep->vbb.i, framep);
 
 		/* We also lock down the memory that was allocated for it */
-		res = CALL(vq, iolock, vq, framep->vbb.i, NULL);
+		res = CALL(vq, iolock, vq, &framep->vbb, NULL);
 		// res = videobuf_iolock(vq, &framep->vbb, NULL);
 		
 		if (res)
