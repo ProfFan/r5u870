@@ -536,6 +536,7 @@ static int usbcam_v4l_vidioc_streamoff(struct file *filp, void *fh,
 static int usbcam_v4l_vidioc_querycap(struct file *filp, void *fh,
 				      struct v4l2_capability *cap)
 {
+	printk(KERN_WARNING "**FAN: !!!!!!! QUERYCAP! %s", __FUNCTION__);
 	struct usbcam_fh *ufp = (struct usbcam_fh *) fh;
 	struct usbcam_dev *udp = ufp->ufh_dev;
 	struct usb_device *udev = interface_to_usbdev(udp->ud_intf);
@@ -549,11 +550,13 @@ static int usbcam_v4l_vidioc_querycap(struct file *filp, void *fh,
 	snprintf(cap->bus_info, sizeof(cap->bus_info),
 		 "usb:%s", udp->ud_dev->dev.bus_id);
          */
-	printk(KERN_WARNING "**FAN: !!!!!!! QUERYCAP! %s", __FUNCTION__);
 	cap->version = udp->ud_minidrv->um_version;
 	cap->capabilities = (V4L2_CAP_DEVICE_CAPS | V4L2_CAP_VIDEO_CAPTURE |
 			     V4L2_CAP_READWRITE |
 			     V4L2_CAP_STREAMING);
+	cap->device_caps = V4L2_CAP_VIDEO_CAPTURE |
+			     V4L2_CAP_READWRITE |
+			     V4L2_CAP_STREAMING;
 	usbcam_unlock(udp);
 	return 0;
 }
