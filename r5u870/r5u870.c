@@ -234,6 +234,8 @@ static int r5u870_query_ctrl(struct usbcam_dev *udp,
 				 const struct usbcam_ctrl *basep,
 				 struct v4l2_queryctrl *c)
 {
+	printk(KERN_WARNING "**FAN: !!!!!!! POSSIBLE BUG! %s", __FUNCTION__);
+
 	struct r5u870_ctx *vhp = udp_r5u870(udp);
 	struct r5u870_ctrl *ctrlp = container_of(basep, struct r5u870_ctrl,
 						base);
