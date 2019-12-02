@@ -579,13 +579,16 @@ static int usbcam_videobuf_prepare(struct videobuf_queue *vq,
 		framep->vmap_sof = NULL;
 
 		usbcam_dbg(udp, VIDEOBUF,
-			   "preparing frame %d/%p", framep->vbb.i, framep);
+			   "preparing frame %p/%d/%p", vq, framep->vbb.i, framep);
 
 		/* We also lock down the memory that was allocated for it */
 		res = videobuf_iolock(vq, &framep->vbb, NULL);
 		if (res)
 			goto fail;
 
+		usbcam_dbg(udp, VIDEOBUF,
+			   "prepared frame %p/%d/%p", vq, framep->vbb.i, framep);
+		
 		/* If there's no kernel mapping, we must create one */
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,36) /*3pei*/
 		if (!dma->vmalloc) {
