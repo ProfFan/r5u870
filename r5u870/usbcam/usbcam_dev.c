@@ -190,14 +190,6 @@ static int usbcam_usb_probe(struct usb_interface *intf,
     v4l2_prio_init(&v4l2dev->prio);
     v4l2dev->ctrl_handler = NULL;
     v4l2dev->notify = v4l2_notify;
-
-	v4l2dev->device_caps = V4L2_CAP_VIDEO_CAPTURE |
-			     V4L2_CAP_READWRITE |
-			     V4L2_CAP_STREAMING;
-
-	v4l2_disable_ioctl(&v4l2dev, VIDIOC_QUERYSTD);
-	v4l2_disable_ioctl(&v4l2dev, VIDIOC_G_STD);
-	v4l2_disable_ioctl(&v4l2dev, VIDIOC_S_STD);
 	
 	/* Allocate and initialize a device structure */
 	udp = (struct usbcam_dev *) kzalloc(sizeof(*udp) + minidrv->um_dev_privsize, GFP_KERNEL);
@@ -227,6 +219,14 @@ static int usbcam_usb_probe(struct usb_interface *intf,
 	udp->ud_vdev.release = usbcam_videodev_release;
     /* sanpei */
     udp->ud_vdev.v4l2_dev = v4l2dev;
+
+	udp->ud_vdev.device_caps = V4L2_CAP_VIDEO_CAPTURE |
+			     V4L2_CAP_READWRITE |
+			     V4L2_CAP_STREAMING;
+
+	v4l2_disable_ioctl(udp.ud_vdev, VIDIOC_QUERYSTD);
+	v4l2_disable_ioctl(udp.ud_vdev, VIDIOC_G_STD);
+	v4l2_disable_ioctl(udp.ud_vdev, VIDIOC_S_STD);
 
 	/* Add the device to the minidriver's list of active devices */
 	usbcam_lock(udp);
