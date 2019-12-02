@@ -1909,7 +1909,6 @@ static int r5u870_uvc_init_ctrl(struct r5u870_ctx *vhp,
 		res = r5u870_uvc_ctrl_req(vhp, ctrlp, UVC_GET_DEF, &val);
 		if (res)
 			goto failed;
-			return res;
 		ctrlp->base.uc_v4l.default_value = val;
 	}
 
